@@ -12,6 +12,7 @@
   <img alt="GitHub" src="https://img.shields.io/github/license/SnowzNZ/Instafader">
   <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/SnowzNZ/Instafader">
   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/SnowzNZ/Instafader">
+  [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 </div>
 
 <details open="open">
