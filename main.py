@@ -71,5 +71,5 @@ blank_image.save("hitcircleoverlay.png")
 config["Fonts"]["HitCirclePrefix"] = "default"
 config["Fonts"]["HitCircleOverlap"] = x  # update hitcircleoverlap in skin.ini
 
-with open("skini.ini, "w") as configfile:  # save everything
+with open("skin.ini", "w") as configfile:  # save everything
     config.write(configfile)
