@@ -8,7 +8,12 @@ from PIL import Image
 config = configparser.ConfigParser(strict=False, allow_no_value=True)
 config.read("skin.ini", encoding="utf8")  # read skin.ini
 
-vars = config.options("Colours")  # get all vars under section
+try:
+    vars = config.options("Colours")  # check for colours section in skin
+except Exception as NoSectionError:  # if not
+    print("No Colours found")  # tell the user no colors are found
+    input()  # pause
+
 
 options = []
 
