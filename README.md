@@ -1,5 +1,5 @@
 <p align="center">
-<img align=center src="https://cdn.discordapp.com/attachments/1044134327434358847/1066189142440018000/test.png" alt="osu! hitcircle fading away" width="140" />
+<img align=center src="./img/logo.png" alt="osu! hitcircle fading away" width="140" />
 </br>
 <strong>Instafader</strong>
 </br>
