@@ -1,8 +1,11 @@
 <p align="center">
-<img align=center src="./img/logo.png" alt="osu! hitcircle fading away" width="140" />
-</br>
-<strong>Instafader</strong>
-</br>
+    <img align=center src="./img/logo.png" alt="osu! hitcircle fading away" width="130" />
+  </a>
+</p>
+<h1 align="center">
+  Instafader
+</h1>
+<p align="center">
 Smooth out your osu! experience
 </br>
 </br>
@@ -21,11 +24,6 @@ This program will automatically turn your osu! skin into an insta-fading one, ba
 ## Download
 
 Either press the Download button above, or download from the [releases](https://github.com/SnowzNZ/Instafader/releases) tab.
-
-
-## Credits
-
-- [couleurm](https://github.com/couleurm) for the [README](https://github.com/couleurm/couleurstoolbox)
 
 ## Contact
 
