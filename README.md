@@ -14,7 +14,7 @@ Smooth out your osu! experience
     <a href="https://discord.gg/pbUqGM7yFV">
     <img src="https://img.shields.io/discord/1044134327434358844?color=7389D8&labelColor=6A7EC2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord" />
 </a>
-    <a href="https://github.com/SnowzNZ/Instafader/blob/rewrite/LICENSE.md">
+    <a href="https://github.com/SnowzNZ/Instafader/blob/main/LICENSE.md">
     <img alt="GitHub" src="https://img.shields.io/github/license/SnowzNZ/Instafader?style=for-the-badge">
 </a>
 </p>
