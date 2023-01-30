@@ -23,6 +23,10 @@ Smooth out your osu! experience
 </a>
 </p>
 
+> **Warning**
+> 
+> This program is still in development.
+
 This program will automatically turn your osu! skin into an insta-fading one, basically removing the animation of the hitcircle and hitcircleoverlay fading away. You can find a comparison video [here](https://youtu.be/C2b8PEHarvM).
 
 ## Download
