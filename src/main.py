@@ -22,8 +22,13 @@ if not os.path.exists(backup_folder):
 try:
     config.read("skin.ini")
     shutil.copy2("skin.ini", f"{backup_folder}/skin.ini")
-except:
+except FileNotFoundError:
     print("No skin.ini found!")
+    sys.exit()
+except PermissionError:
+    print(
+        "The program does not have permission to read skin.ini! Try running it as admin."
+    )
     sys.exit()
 
 options = []
@@ -86,11 +91,24 @@ try:
 except:
     r, g, b = (255, 255, 255)
 
+width, height = hitcircle.size
 
-solid_color = Image.new("RGB", hitcircle.size, color=(r, g, b))
-solid_color = solid_color.convert(hitcircle.mode)
-result = Image.blend(hitcircle, solid_color, 1.0)
-result.save("b.png")
+for x in range(width):
+    for y in range(height):
+        # Get the pixel at the current position
+        pixel = hitcircle.getpixel((x, y))
+        # Calculate the brightness of the pixel
+        brightness = sum(pixel) / 3
+        # Calculate the amount of desaturation based on the brightness
+        desaturation = int(brightness * 0.5)
+        # Choose a color for the pixel
+        color = (255, 0, 0)  # red
+        # Create a new color with reduced saturation
+        desaturated_color = tuple(c - desaturation for c in color)
+        # Set the pixel to the new color
+        hitcircle.putpixel((x, y), desaturated_color)
+
+hitcircle.save("recolored_circle.png")
 
 # hitcircle = hitcircle.point(lambda x: (x, x, x, 255))
 # hitcircle.save("overlayed.png")
