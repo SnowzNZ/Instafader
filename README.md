@@ -9,13 +9,17 @@
 Smooth out your osu! experience
 </br>
 </br>
-    <a href="https://github.com/SnowzNZ/Instafader/releases/latest/Instafader.exe">
-    <img src="https://img.shields.io/badge/Download-exe-brightgreen?style=for-the-badge" alt="Download" />
-    <a href="https://discord.gg/pbUqGM7yFV">
-    <img src="https://img.shields.io/discord/1044134327434358844?color=7389D8&labelColor=6A7EC2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord" />
+<a href="https://github.com/SnowzNZ/Instafader/releases/latest/Instafader.exe">
+    <img src="https://img.shields.io/badge/Download-exe-brightgreen?style=for-the-badge" alt="Download"/>
 </a>
-    <a href="https://github.com/SnowzNZ/Instafader/blob/main/LICENCE.md">
-    <img alt="GitHub" src="https://img.shields.io/github/license/SnowzNZ/Instafader?style=for-the-badge">
+<a href="https://www.codefactor.io/repository/github/snowznz/instafader">
+    <img src="https://img.shields.io/codefactor/grade/github/SnowzNZ/Instafader?style=for-the-badge" alt="Codefactor Grade" />
+</a>
+<a href="https://github.com/SnowzNZ/Instafader/blob/main/LICENCE.md">
+    <img alt="Repo Licence" src="https://img.shields.io/github/license/SnowzNZ/Instafader?style=for-the-badge">
+</a>
+<a href="https://discord.gg/pbUqGM7yFV">
+    <img src="https://img.shields.io/discord/1044134327434358844?color=7389D8&labelColor=6A7EC2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord"/>
 </a>
 </p>
 
