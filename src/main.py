@@ -78,9 +78,9 @@ for option in config["Colours"]:
 
 option, _ = pick.pick(options=options, title="Choose color")
 
-rgb = tuple(map(int, option[1].split(",")))
+r, g, b = tuple(map(int, option[1].split(",")))
 
-solid_color = Image.new("RGBA", (hitcircle.width, hitcircle.height), rgb)
+solid_color = Image.new("RGBA", (hitcircle.width, hitcircle.height), (r, g, b))
 
 hitcircle = ImageChops.multiply(hitcircle.convert("RGBA"), solid_color.convert("RGBA"))
 hitcircle = hitcircle.resize(
