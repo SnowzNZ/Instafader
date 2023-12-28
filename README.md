@@ -1,39 +1,23 @@
 <p align="center">
-    <img align=center src="./img/logo.png" alt="osu! hitcircle fading away" width="130" />
-  </a>
-</p>
+<img src="./img/logo.png" alt="osu! hitcircle fading away" width="130" />
 <h1 align="center">
   Instafader
 </h1>
 <p align="center">
-Smooth out your osu! experience
-</br>
-</br>
 <a href="https://github.com/SnowzNZ/Instafader/releases/latest/Instafader.exe">
     <img src="https://img.shields.io/badge/Download-exe-brightgreen?style=for-the-badge" alt="Download"/>
 </a>
 <a href="https://www.codefactor.io/repository/github/snowznz/instafader">
     <img src="https://img.shields.io/codefactor/grade/github/SnowzNZ/Instafader?style=for-the-badge" alt="Codefactor Grade" />
 </a>
-<a href="https://github.com/SnowzNZ/Instafader/blob/main/LICENCE.md">
+<a href="https://github.com/SnowzNZ/Instafader/blob/main/LICENCE">
     <img alt="Repo Licence" src="https://img.shields.io/github/license/SnowzNZ/Instafader?style=for-the-badge">
 </a>
-<a href="https://discord.gg/pbUqGM7yFV">
-    <img src="https://img.shields.io/discord/1044134327434358844?color=7389D8&labelColor=6A7EC2&label=Discord&logo=discord&logoColor=white&style=for-the-badge" alt="Discord"/>
-</a>
-</p>
 
-> **Warning**
-> 
-> This program is still in development.
-
-This program will automatically turn your osu! skin into an insta-fading one, basically removing the animation of the hitcircle and hitcircleoverlay fading away. You can find a comparison video [here](https://youtu.be/C2b8PEHarvM).
-
-## Download
-
-Either press the Download button above, or download from the [releases](https://github.com/SnowzNZ/Instafader/releases) tab.
+Instafader automatically turns your osu! skin into an insta-fading one, essentially removing the animation of the hitcircle and hitcircleoverlay fading away. You can see a comparison [here](https://youtu.be/C2b8PEHarvM).
 
 ## Contact
+Either open an [issue](https://github.com/SnowzNZ/Instafader/issues) or DM me on discord @snowz.nz
 
-- [Twitter](https://twitter.com/Snowz2k)
-- [Discord Server](https://discord.gg/pbUqGM7yFV)
+## License
+Instafader is licensed under the [MIT License](LICENSE)
