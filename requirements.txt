@@ -1,3 +1,4 @@
 pick
 pillow
-numpy
+types-Pillow
+pyinstaller
