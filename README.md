@@ -4,6 +4,7 @@
   Instafader
 </h1>
 <p align="center">
+<img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/SnowzNZ/Instafader/build.yml">
 <a href="https://www.codefactor.io/repository/github/snowznz/instafader"><img src="https://www.codefactor.io/repository/github/snowznz/instafader/badge" alt="CodeFactor" /></a>
 <a href="LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/SnowzNZ/Instafader"/></a>
 
