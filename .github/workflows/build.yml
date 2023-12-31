@@ -28,13 +28,8 @@ jobs:
       - name: Build executable
         run: pyinstaller "src\main.py" --onefile --name "Instafader"
 
-      - name: Create folder structure
-        run: |
-          mkdir Instafader
-          move "dist\Instafader.exe" Instafader
-
       - name: Zip release
-        run: Compress-Archive -Path Instafader -DestinationPath Instafader.zip
+        run: Compress-Archive -Path dist\Instafader.exe -DestinationPath Instafader.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
