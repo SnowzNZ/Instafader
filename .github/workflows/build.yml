@@ -8,27 +8,36 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        
-    - name: Build executable
-      run: pyinstaller "src/main.py" --onefile --name "Instafader" 
-    
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: Instafader
-        path: dist\Instafader.exe
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11.7
+
+      - name: Install pyinstaller
+        run: python -m pip install pyinstaller
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Build executable
+        run: pyinstaller "src\main.py" --onefile --name "Instafader"
+
+      - name: Create folder structure
+        run: |
+          mkdir Instafader
+          move "dist\Instafader.exe" Instafader
+
+      - name: Zip release
+        run: Compress-Archive -Path Instafader -DestinationPath Instafader.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Instafader
+          path: Instafader.zip
