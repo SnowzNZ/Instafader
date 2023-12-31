@@ -4,6 +4,7 @@
   Instafader
 </h1>
 <p align="center">
+<a href="https://nightly.link/SnowzNZ/Instafader/workflows/build/main/Instafader.zip"><img alt="Static Badge" src="https://img.shields.io/badge/latest%20dev%20build-download-brightgreen" /></a>
 <img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/SnowzNZ/Instafader/build.yml">
 <a href="https://www.codefactor.io/repository/github/snowznz/instafader"><img src="https://www.codefactor.io/repository/github/snowznz/instafader/badge" alt="CodeFactor" /></a>
 <a href="LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/SnowzNZ/Instafader"/></a>
