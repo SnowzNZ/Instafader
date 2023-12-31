@@ -9,6 +9,7 @@
 <a href="LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/SnowzNZ/Instafader"/></a>
 
 Instafader automatically turns your osu! skin into an insta-fading one, essentially removing the animation of the hitcircle and hitcircleoverlay fading away.
+
 https://github.com/SnowzNZ/Instafader/assets/98007575/3876c72a-42c2-4ec5-a8f3-0b4b1dad1a57
 
 
