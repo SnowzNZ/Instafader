@@ -6,6 +6,7 @@ import sys
 import shutil
 from PIL import Image, ImageChops
 import pick
+import re
 
 # Ask for skin folder
 skin_folder = filedialog.askdirectory(title="Select Skin Folder")
@@ -18,7 +19,6 @@ backup_folder = (
     f"Instafader-Backup-{datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
 )
 os.mkdir(backup_folder)
-print("Creating backup folder")
 
 # Initialize configparser
 config = configparser.ConfigParser(
@@ -31,9 +31,9 @@ config = configparser.ConfigParser(
 
 try:
     # Create backup of skin.ini
-    shutil.copy2("skin.ini", f"{backup_folder}/skin.ini")
+    shutil.copy2("skin.ini", os.path.join(backup_folder, "skin.ini"))
 
-    # lstrip(" \t") each line
+    # Remove indentation
     with open("skin.ini", encoding="utf-8") as f:
         lines = [line.lstrip(" \t") for line in f]
 
@@ -42,49 +42,72 @@ try:
 
 except FileNotFoundError:
     print("No skin.ini found!")
-    sys.exit()
+    sys.exit(1)
 
-# Try to open the @2x hitcircle, if it cant be found then try to open the SD hitcircle
+# Ask if user wants to use hitcircle or sliderstartcircle
+...
+
+# Ask if user wants to use hitcircleoverlay or sliderstartcircleoverlay
+...
+
 try:
     hitcircle = Image.open("hitcircle@2x.png")
-    shutil.copy2("hitcircle@2x.png", f"{backup_folder}/hitcircle@2x.png")
+    shutil.copy2("hitcircle@2x.png", os.path.join(backup_folder, "hitcircle@2x.png"))
+    hitcircle_hd = True
 except FileNotFoundError:
     try:
         hitcircle = Image.open("hitcircle.png")
-        shutil.copy2("hitcircle.png", f"{backup_folder}/hitcircle.png")
+        shutil.copy2("hitcircle.png", os.path.join(backup_folder, "hitcircle.png"))
+        hitcircle_hd = False
     except FileNotFoundError:
-        # Alert the user if no hitcircle image could be found
-        print("No hitcircle could be found in the provided skin!")
-        sys.exit()
+        print("No hitcircle could be found!")
+        sys.exit(1)
 
-# Try to open the @2x hitcircleoverlay, if it cant be found then try to open the SD hitcircleoverlay
 try:
     hitcircleoverlay = Image.open("hitcircleoverlay@2x.png")
-    shutil.copy2("hitcircleoverlay@2x.png", f"{backup_folder}/hitcircleoverlay@2x.png")
+    shutil.copy2(
+        "hitcircleoverlay@2x.png",
+        os.path.join(backup_folder, "hitcircleoverlay@2x.png"),
+    )
+    hitcircleoverlay_hd = True
 except FileNotFoundError:
     try:
         hitcircleoverlay = Image.open("hitcircleoverlay.png")
-        shutil.copy2("hitcircleoverlay.png", f"{backup_folder}/hitcircleoverlay.png")
+        shutil.copy2(
+            "hitcircleoverlay.png",
+            os.path.join(backup_folder, "hitcircleoverlay.png"),
+        )
+        hitcircleoverlay_hd = False
     except FileNotFoundError:
-        # Alert the user if no hitcircle image could not be found
-        print("No hitcircleoverlay could be found in the provided skin!")
-        sys.exit()
+        print("No hitcircleoverlay could be found!")
+        sys.exit(1)
 
 options = []
 
 for option in config["Colours"]:
     if option.startswith("combo"):
-        options.append((option, config["Colours"][option]))
+        options.append((str(option).capitalize(), config["Colours"][option]))
+options.append(("Custom Colour", ""))
 
-option, _ = pick.pick(options=options, title="Choose color")
+option, _ = pick.pick(options=options, title="Choose color", indicator=">")  # type: ignore
 
-r, g, b = tuple(map(int, option[1].split(",")))
+if option[0] == "Custom Colour":
+    custom_color = input("RGB Color (e.g. 255, 149, 182): ")
+    r, g, b = tuple(map(int, custom_color.split(",")))
+else:
+    r, g, b = tuple(map(int, option[1].split(",")))
 
-solid_color = Image.new("RGBA", (hitcircle.width, hitcircle.height), (r, g, b))
+if not (r == 255 and g == 255 and b == 255):
+    # Create image of solid color
+    solid_color = Image.new("RGBA", (hitcircle.width, hitcircle.height), (r, g, b))
 
-hitcircle = ImageChops.multiply(hitcircle.convert("RGBA"), solid_color.convert("RGBA"))
+    hitcircle = ImageChops.multiply(
+        hitcircle.convert("RGBA"), solid_color.convert("RGBA")
+    )
+
 hitcircle = hitcircle.resize(
-    (int(hitcircle.width * 1.25), int(hitcircle.height * 1.25)), resample=Image.LANCZOS
+    (int(hitcircle.width * 1.25), int(hitcircle.height * 1.25)),
+    resample=Image.LANCZOS,
 )
 
 hitcircleoverlay = hitcircleoverlay.resize(
@@ -93,11 +116,8 @@ hitcircleoverlay = hitcircleoverlay.resize(
 )
 
 
-if hitcircle.size < hitcircleoverlay.size:
-    # Create a new image with the desired canvas size
-    no_number = Image.new(
-        "RGBA", hitcircleoverlay.size, (255, 255, 255, 0)
-    )  # Use a white background
+if hitcircleoverlay.size > hitcircle.size:
+    circle = Image.new("RGBA", hitcircleoverlay.size, (255, 255, 255, 0))
 
     # Calculate the position to paste the original image centered on the new canvas
     paste_position = (
@@ -106,74 +126,136 @@ if hitcircle.size < hitcircleoverlay.size:
     )
 
     # Paste the original image onto the new canvas
-    no_number.paste(hitcircle, paste_position)
-    no_number.paste(hitcircleoverlay, (0, 0), hitcircleoverlay)
+    circle.paste(hitcircle, paste_position, hitcircle)
+    circle.paste(hitcircleoverlay, (0, 0))
+    circle.save("circle.png")
 
 elif hitcircle.size > hitcircleoverlay.size:
-    no_number = Image.new("RGBA", hitcircle.size, (255, 255, 255, 0))
+    circle = Image.new("RGBA", hitcircle.size, (255, 255, 255, 0))
 
     paste_position = (
         (hitcircle.width - hitcircleoverlay.width) // 2,
         (hitcircle.height - hitcircleoverlay.height) // 2,
     )
 
-    no_number.paste(hitcircleoverlay, paste_position)
-    no_number.paste(hitcircle, (0, 0), hitcircle)
-else:
-    no_number = hitcircle.paste(hitcircleoverlay, (0, 0), hitcircleoverlay)
+    circle.paste(hitcircleoverlay, paste_position, hitcircleoverlay)
+    circle.paste(hitcircle, (0, 0))
+    circle.save("circle.png")
 
-no_number.save("no-number.png")
+elif hitcircle.size == hitcircleoverlay.size:
+    hitcircle.paste(hitcircleoverlay, (0, 0), hitcircleoverlay)
+    hitcircle.save("circle.png")
 
 
 # Get the prefix of the hitcircle number
-hitcircle_prefix = config["Fonts"]["HitCirclePrefix"]
+try:
+    hitcircle_prefix = config["Fonts"]["HitCirclePrefix"]
+except KeyError:
+    hitcircle_prefix = "default"
 
-# Check if all the hitcircle numbers exist
-for i in range(10):
+for i in range(1, 10):
     try:
-        # Try to open the @2x hitcircle number
         number = Image.open(f"{hitcircle_prefix}-{i}@2x.png")
         hd = True
-        # Copy the file into the backup folder
         shutil.copy2(
             f"{hitcircle_prefix}-{i}@2x.png",
             f"{backup_folder}/{hitcircle_prefix}-{i}@2x.png",
         )
     except FileNotFoundError:
         try:
-            # Try to open the SD hitcircle number
             number = Image.open(f"{hitcircle_prefix}-{i}.png")
-            # Copy the file into the backup folder
+            hd = False
             shutil.copy2(
                 f"{hitcircle_prefix}-{i}.png",
                 f"{backup_folder}/{hitcircle_prefix}-{i}.png",
             )
         except FileNotFoundError:
-            # Alert the user if the hitcircle number could not be found
-            print(f"No default-{i}(@2x) could be found in the provided skin!")
-            sys.exit()  # Move this line inside the inner except block
+            print(f"No {hitcircle_prefix}-{i} could be found in the provided skin!")
+            sys.exit(1)
 
-    # Paste the hitcircle number on top of the no-number image
-    no_number = Image.open("no-number.png")
+    circle = Image.open("circle.png")
+
+    if number.size > circle.size:
+        no_number = Image.new("RGBA", number.size, (255, 255, 255, 0))
+
+        # Calculate the position to paste the original image centered on the new canvas
+        paste_position = (
+            (number.width - circle.width) // 2,
+            (number.height - circle.height) // 2,
+        )
+
+        # Paste the original image onto the new canvas
+        no_number.paste(circle, paste_position, circle)
+        no_number.paste(number, (0, 0))
+    else:
+        no_number = circle
+
+    # Paste the hitcircle number on top of the circle image
     x, y = no_number.size
-    a, b = number.size
-    no_number.paste(number, ((x - a) // 2, (y - b) // 2), number)
-    no_number.save(f"default-{i}{'@2x' if hd else ''}.png")
+    if not hd:
+        no_number = no_number.resize((x // 2, y // 2), resample=Image.LANCZOS)
+    x, y = no_number.size
+    w, h = number.size
+    no_number.paste(number, ((x - w) // 2, (y - h) // 2), number)
+    no_number.save(f"{hitcircle_prefix}-{i}{'@2x' if hd else ''}.png")
+
+default_0 = Image.new("RGBA", (no_number.size), (255, 255, 255, 0))
+default_0.save(f"{hitcircle_prefix}-0{'@2x' if hd else ''}.png")
+
+# create blank images for hitcircles
+blank_image = Image.new("RGBA", (1, 1), (255, 255, 255, 0))
+blank_image.save(f"hitcircle{'@2x' if hitcircle_hd else ''}.png")
+blank_image.save(f"hitcircleoverlay{'@2x' if hitcircleoverlay_hd else ''}.png")
+
+try:
+    os.remove("circle.png")
+except FileNotFoundError:
+    pass
+
+try:
+    os.remove("sliderstartcircle.png")
+    os.remove("sliderstartcircle@2x.png")
+
+    os.remove("sliderstartcircleoverlay.png")
+    os.remove("sliderstartcircleoverlay@2x.png")
+except FileNotFoundError:
+    pass
 
 
-config["Fonts"]["HitCircleOverlap"] = str(x // 2 if hd else x)
+with open("skin.ini", "r") as f:
+    lines = f.readlines()
 
-for option in config["Colours"]:
-    if option.startswith("combo"):
-        if not option.startswith("combo1"):
-            del config["Colours"][option]
+for i, line in enumerate(lines):
+    if "HitCircleOverlap" in line and "//" not in line:
+        lines[i] = f"HitCircleOverlap: {str(x // 2 if hd else x)}\n"
+    if "Combo1" in line and "//" not in line:
+        lines[i] = f"Combo1: {r}, {g}, {b}\n"
+    if re.search(r"Combo\d+", line) and "Combo1" not in line and "//" not in line:
+        lines[i] = ""
 
-config["Colours"]["Combo1"] = option[1]
+with open("skin.ini", "w") as f:
+    f.writelines(lines)
 
-# Write all changes
-...
+
+print(
+    f"""Due to how current code limitation, you will have to do the following manually:
+    - Delete all Combo colours except for Combo1"""
+)
+
+# config["Fonts"]["HitCircleOverlap"] = str(x // 2 if hd else x)
+
+# for option in config["Colours"]:
+#     if option.startswith("combo"):
+#         if not option.startswith("combo1"):
+#             del config["Colours"][option]
+
+# config["Colours"]["Combo1"] = option[1]
 
 
 # Todo:
-# - Ask if user wants to use sliderendcircle/overlay if it exists
-# - Do checks for HD assets and account for that
+# - Ask if user wants to use sliderendcircle/overlay instead if it exists
+# - Account for transparency
+# - Account for HitCirclePrefixes with a path
+# - Account for HitCircleOverlayAboveNum(b)er
+# - Account for SD circle (and HD/SD mismatch of hitcircle(overlay)) (# - Do checks for HD assets and account for that)
+# - Alternating/multiple colors
