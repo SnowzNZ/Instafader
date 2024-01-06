@@ -105,27 +105,47 @@ if not (r == 255 and g == 255 and b == 255):
         hitcircle.convert("RGBA"), solid_color.convert("RGBA")
     )
 
+# Resize by 1.25x
 hitcircle = hitcircle.resize(
-    (int(hitcircle.width * 1.25), int(hitcircle.height * 1.25)),
-    resample=Image.LANCZOS,
+    (
+        int(
+            hitcircle.width
+            * (2.5 if not hitcircle_hd and hitcircleoverlay_hd else 1.25)
+        ),
+        int(
+            hitcircle.height
+            * (2.5 if not hitcircle_hd and hitcircleoverlay_hd else 1.25)
+        ),
+    ),
+    resample=Image.Resampling.LANCZOS,
 )
 
 hitcircleoverlay = hitcircleoverlay.resize(
-    (int(hitcircleoverlay.width * 1.25), int(hitcircleoverlay.height * 1.25)),
-    resample=Image.LANCZOS,
+    (
+        int(
+            hitcircleoverlay.width
+            * (2.5 if not hitcircleoverlay_hd and hitcircle_hd else 1.25)
+        ),
+        int(
+            hitcircleoverlay.height
+            * (2.5 if not hitcircleoverlay_hd and hitcircle_hd else 1.25)
+        ),
+    ),
+    resample=Image.Resampling.LANCZOS,
 )
 
+circle_hd = False
+if hitcircle_hd or hitcircleoverlay_hd:
+    circle_hd = True
 
 if hitcircleoverlay.size > hitcircle.size:
     circle = Image.new("RGBA", hitcircleoverlay.size, (255, 255, 255, 0))
 
-    # Calculate the position to paste the original image centered on the new canvas
     paste_position = (
         (hitcircleoverlay.width - hitcircle.width) // 2,
         (hitcircleoverlay.height - hitcircle.height) // 2,
     )
 
-    # Paste the original image onto the new canvas
     circle.paste(hitcircle, paste_position, hitcircle)
     circle.paste(hitcircleoverlay, (0, 0))
     circle.save("circle.png")
@@ -138,8 +158,8 @@ elif hitcircle.size > hitcircleoverlay.size:
         (hitcircle.height - hitcircleoverlay.height) // 2,
     )
 
-    circle.paste(hitcircleoverlay, paste_position, hitcircleoverlay)
     circle.paste(hitcircle, (0, 0))
+    circle.paste(hitcircleoverlay, paste_position, hitcircleoverlay)
     circle.save("circle.png")
 
 elif hitcircle.size == hitcircleoverlay.size:
@@ -191,11 +211,14 @@ for i in range(1, 10):
         no_number = circle
 
     # Paste the hitcircle number on top of the circle image
-    x, y = no_number.size
-    if not hd:
-        no_number = no_number.resize((x // 2, y // 2), resample=Image.LANCZOS)
-    x, y = no_number.size
     w, h = number.size
+    # if number isnt hd
+    if not hd:
+        # if circle is hd
+        if circle_hd:
+            number = number.resize((w * 2, h * 2), resample=Image.Resampling.LANCZOS)
+
+    x, y = no_number.size
     no_number.paste(number, ((x - w) // 2, (y - h) // 2), number)
     no_number.save(f"{hitcircle_prefix}-{i}{'@2x' if hd else ''}.png")
 
@@ -207,10 +230,10 @@ blank_image = Image.new("RGBA", (1, 1), (255, 255, 255, 0))
 blank_image.save(f"hitcircle{'@2x' if hitcircle_hd else ''}.png")
 blank_image.save(f"hitcircleoverlay{'@2x' if hitcircleoverlay_hd else ''}.png")
 
-try:
-    os.remove("circle.png")
-except FileNotFoundError:
-    pass
+# try:
+#     os.remove("circle.png")
+# except FileNotFoundError:
+#     pass
 
 try:
     os.remove("sliderstartcircle.png")
@@ -235,22 +258,6 @@ for i, line in enumerate(lines):
 
 with open("skin.ini", "w") as f:
     f.writelines(lines)
-
-
-print(
-    f"""Due to how current code limitation, you will have to do the following manually:
-    - Delete all Combo colours except for Combo1"""
-)
-
-# config["Fonts"]["HitCircleOverlap"] = str(x // 2 if hd else x)
-
-# for option in config["Colours"]:
-#     if option.startswith("combo"):
-#         if not option.startswith("combo1"):
-#             del config["Colours"][option]
-
-# config["Colours"]["Combo1"] = option[1]
-
 
 # Todo:
 # - Ask if user wants to use sliderendcircle/overlay instead if it exists
