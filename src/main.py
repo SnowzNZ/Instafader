@@ -1,12 +1,13 @@
-import os
-import datetime
-from tkinter import filedialog
 import configparser
-import sys
-import shutil
-from PIL import Image, ImageChops
-import pick
+import datetime
+import os
 import re
+import shutil
+import sys
+from tkinter import filedialog
+
+import pick
+from PIL import Image, ImageChops
 
 # Ask for skin folder
 skin_folder = filedialog.askdirectory(title="Select Skin Folder")
@@ -15,9 +16,7 @@ skin_folder = filedialog.askdirectory(title="Select Skin Folder")
 os.chdir(skin_folder)
 
 # Create backup folder
-backup_folder = (
-    f"Instafader-Backup-{datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
-)
+backup_folder = f"Instafader-Backup-{datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
 os.mkdir(backup_folder)
 
 # Initialize configparser
@@ -52,12 +51,16 @@ except FileNotFoundError:
 
 try:
     hitcircle = Image.open("hitcircle@2x.png")
-    shutil.copy2("hitcircle@2x.png", os.path.join(backup_folder, "hitcircle@2x.png"))
+    shutil.copy2(
+        "hitcircle@2x.png", os.path.join(backup_folder, "hitcircle@2x.png")
+    )
     hitcircle_hd = True
 except FileNotFoundError:
     try:
         hitcircle = Image.open("hitcircle.png")
-        shutil.copy2("hitcircle.png", os.path.join(backup_folder, "hitcircle.png"))
+        shutil.copy2(
+            "hitcircle.png", os.path.join(backup_folder, "hitcircle.png")
+        )
         hitcircle_hd = False
     except FileNotFoundError:
         print("No hitcircle could be found!")
@@ -99,7 +102,9 @@ else:
 
 if not (r == 255 and g == 255 and b == 255):
     # Create image of solid color
-    solid_color = Image.new("RGBA", (hitcircle.width, hitcircle.height), (r, g, b))
+    solid_color = Image.new(
+        "RGBA", (hitcircle.width, hitcircle.height), (r, g, b)
+    )
 
     hitcircle = ImageChops.multiply(
         hitcircle.convert("RGBA"), solid_color.convert("RGBA")
@@ -190,7 +195,9 @@ for i in range(1, 10):
                 f"{backup_folder}/{hitcircle_prefix}-{i}.png",
             )
         except FileNotFoundError:
-            print(f"No {hitcircle_prefix}-{i} could be found in the provided skin!")
+            print(
+                f"No {hitcircle_prefix}-{i} could be found in the provided skin!"
+            )
             sys.exit(1)
 
     circle = Image.open("circle.png")
@@ -216,7 +223,9 @@ for i in range(1, 10):
     if not hd:
         # if circle is hd
         if circle_hd:
-            number = number.resize((w * 2, h * 2), resample=Image.Resampling.LANCZOS)
+            number = number.resize(
+                (w * 2, h * 2), resample=Image.Resampling.LANCZOS
+            )
 
     x, y = no_number.size
     no_number.paste(number, ((x - w) // 2, (y - h) // 2), number)
@@ -230,10 +239,10 @@ blank_image = Image.new("RGBA", (1, 1), (255, 255, 255, 0))
 blank_image.save(f"hitcircle{'@2x' if hitcircle_hd else ''}.png")
 blank_image.save(f"hitcircleoverlay{'@2x' if hitcircleoverlay_hd else ''}.png")
 
-# try:
-#     os.remove("circle.png")
-# except FileNotFoundError:
-#     pass
+try:
+    os.remove("circle.png")
+except FileNotFoundError:
+    pass
 
 try:
     os.remove("sliderstartcircle.png")
@@ -253,7 +262,11 @@ for i, line in enumerate(lines):
         lines[i] = f"HitCircleOverlap: {str(x // 2 if hd else x)}\n"
     if "Combo1" in line and "//" not in line:
         lines[i] = f"Combo1: {r}, {g}, {b}\n"
-    if re.search(r"Combo\d+", line) and "Combo1" not in line and "//" not in line:
+    if (
+        re.search(r"Combo\d+", line)
+        and "Combo1" not in line
+        and "//" not in line
+    ):
         lines[i] = ""
 
 with open("skin.ini", "w") as f:
@@ -266,3 +279,4 @@ with open("skin.ini", "w") as f:
 # - Account for HitCircleOverlayAboveNum(b)er
 # - Account for SD circle (and HD/SD mismatch of hitcircle(overlay)) (# - Do checks for HD assets and account for that)
 # - Alternating/multiple colors
+# - Change if skin.ini entry has // in the line at all it wont be overwritten
